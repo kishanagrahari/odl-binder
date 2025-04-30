@@ -15,13 +15,17 @@ RUN apt-get update && \
 RUN pip install numpy scipy pandas matplotlib h5py==2.10.0
 RUN pip install Theano==0.8.2
 RUN pip install keras==1.2.1
+RUN pip install jupyter
 
 # Clone the ODL repo
 RUN git clone https://github.com/LIBOL/ODL.git
+
+# Replace Keras training.py with the custom ODL version
+RUN cp /home/odl/ODL/training.py /usr/local/lib/python2.7/dist-packages/keras/engine/training.py
 
 # Download sample dataset
 RUN mkdir -p /home/odl/ODL/data && \
     wget -O /home/odl/ODL/data/higgs.mat https://www.dropbox.com/s/fvqnhe34cf0mlz9/higgs_100k.mat?dl=1
 
-# Start Jupyter when container loads
+# Set default command
 CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''"]
