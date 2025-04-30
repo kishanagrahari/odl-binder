@@ -26,7 +26,8 @@ RUN pip install notebook==5.7.8 jupyter-client==5.3.5 ipykernel==4.10.1 \
 RUN git clone https://github.com/LIBOL/ODL.git
 
 # Replace Keras training.py with the custom ODL version
-RUN cp /home/odl/ODL/training.py /usr/local/lib/python2.7/dist-packages/keras/engine/training.py
+RUN python -c "import keras; import os; p=os.path.dirname(keras.__file__); open('/tmp/training_path.txt','w').write(p)" && \
+    cp /home/odl/ODL/training.py $(cat /tmp/training_path.txt)/engine/training.py
 
 # Download sample dataset
 RUN mkdir -p /home/odl/ODL/data && \
